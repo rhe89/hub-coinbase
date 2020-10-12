@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+      <ProjectReference Include="..\Coinbase.Dto\Coinbase.Dto.csproj" />
+      <ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hub.HostedServices" Version="1.0.0" />
+    </ItemGroup>
+
+</Project>
