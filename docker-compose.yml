@@ -10,7 +10,7 @@ services:
     coinbase-workers:
         container_name: "coinbase_worker"
         build:
-            context: ./src/Coinbase
+            context: ./hub-coinbase
             dockerfile: Coinbase.BackgroundWorker/Dockerfile
         image: "coinbase/worker"
         environment:
@@ -24,7 +24,7 @@ services:
     coinbase-api:
         container_name: "coinbase_api"
         build: 
-            context: ./src/Coinbase
+            context: ./hub-coinbase
             dockerfile: Coinbase.Web.Api/Dockerfile
         image: "coinbase/api"
         hostname: "coinbase-api"
