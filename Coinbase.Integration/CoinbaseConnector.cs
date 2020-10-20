@@ -28,18 +28,18 @@ namespace Coinbase.Integration
             }
             catch (Exception e)
             {
-                throw new Exception("CoinbaseConnector: Error sending request to Coinbase API", e);
+                throw new CoinbaseConnectorException("CoinbaseConnector: Error sending request to Coinbase API", e);
             }
 
             if (response?.Errors != null &&
-                response.Errors.Any() &&
-                !response.Errors.Any(x => x.Id == "not_found"))
+                response.Errors.Any() && 
+                response.Errors.All(x => x.Id != "not_found"))
             {
                 var errors = response.Errors;
 
                 var msg = string.Join(",", errors.Select(x => x.Message));
 
-                throw new Exception($"CoinbaseConnector: Response from Coinbase contained errors: {msg}");
+                throw new CoinbaseConnectorException($"CoinbaseConnector: Response from Coinbase contained errors: {msg}");
             }
 
 

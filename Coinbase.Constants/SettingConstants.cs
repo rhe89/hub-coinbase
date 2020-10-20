@@ -2,8 +2,8 @@
 {
     public static class SettingConstants
     {
-        public const string CoinbaseApiKey = "CoinbaseApiKey";
+        public static readonly string CoinbaseApiKey = "CoinbaseApiKey";
 
-        public const string CoinbaseApiSecret = "CoinbaseApiSecret";
+        public static readonly string CoinbaseApiSecret = "CoinbaseApiSecret";
     }
 }

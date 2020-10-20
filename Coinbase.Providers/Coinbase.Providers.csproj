@@ -10,7 +10,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Hub.Storage.Providers" Version="1.0.0" />
+      <PackageReference Include="Hub.Storage.Providers" Version="1.0.1" />
     </ItemGroup>
 
 </Project>

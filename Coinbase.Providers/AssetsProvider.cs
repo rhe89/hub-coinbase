@@ -18,7 +18,7 @@ namespace Coinbase.Providers
 
         public async Task<IList<AssetDto>> GetAssets()
         {
-            var assets = await _dbRepository.GetManyAsync<Asset>(null, nameof(Asset.Account));
+            var assets = await _dbRepository.GetManyAsync<Asset>(nameof(Asset.Account));
 
             return assets
                 .Select(x => new AssetDto

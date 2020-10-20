@@ -12,7 +12,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Hub.Web.ApiControllers" Version="1.0.0" />
-    <PackageReference Include="Hub.Web.HostBuilder" Version="1.0.0" />
+    <PackageReference Include="Hub.Web.ApiControllers" Version="1.0.3" />
+    <PackageReference Include="Hub.Web.HostBuilder" Version="1.0.4" />
   </ItemGroup>
 </Project>

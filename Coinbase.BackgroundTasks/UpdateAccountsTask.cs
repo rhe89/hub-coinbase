@@ -94,7 +94,10 @@ namespace Coinbase.BackgroundTasks
         {
             var account = _coinbaseConnector.GetAccountForCurrency(currency);
 
-            if (account == null) return null;
+            if (account == null)
+            {
+                return null;
+            }
 
             var nativeBalance = "";
             var balance = "";
@@ -104,6 +107,7 @@ namespace Coinbase.BackgroundTasks
             {
                 nativeBalance = jTokenObject["amount"].Value<string>();
             }
+            
             if (account.Data.ExtraData.TryGetValue("balance", out jTokenObject))
             {
                 balance = jTokenObject["amount"].Value<string>();

@@ -24,6 +24,7 @@ namespace Coinbase.Web.Api
         protected override void RegisterDomainDependenciesForQueueHostedService(IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
+            // Not needed since all dependencies are registered elsewhere
         }
 
         protected override void RegisterSharedDomainDependencies(IServiceCollection serviceCollection, IConfiguration configuration)
