@@ -1,33 +1,29 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Coinbase.Data.Entities;
-using Coinbase.Dto.Api;
-using Hub.Storage.Repository;
+using Coinbase.Core.Dto.Data;
+using Coinbase.Core.Entities;
+using Coinbase.Core.Providers;
+using Hub.Storage.Core.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Coinbase.Providers
 {
     public class AssetsProvider : IAssetsProvider
     {
-        private readonly IDbRepository _dbRepository;
+        private readonly IHubDbRepository _dbRepository;
 
-        public AssetsProvider(IDbRepository dbRepository)
+        public AssetsProvider(IHubDbRepository dbRepository)
         {
             _dbRepository = dbRepository;
         }
 
         public async Task<IList<AssetDto>> GetAssets()
         {
-            var assets = await _dbRepository.GetManyAsync<Asset>(nameof(Asset.Account));
+            var assets = _dbRepository
+                .Set<Asset>()
+                .Include(x => x.Account);
 
-            return assets
-                .Select(x => new AssetDto
-                {
-                    Currency = x.Account.Currency,
-                    Value = x.Value,
-                    CreatedDate = x.CreatedDate
-                })
-                .ToList();
+            return await _dbRepository.ProjectAsync<Asset, AssetDto>(assets);
         }
     }
 }

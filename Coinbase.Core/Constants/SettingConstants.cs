@@ -1,4 +1,4 @@
-﻿namespace Coinbase.Constants
+﻿namespace Coinbase.Core.Constants
 {
     public static class SettingConstants
     {

@@ -1,35 +1,24 @@
 using AutoMapper;
 using Coinbase.BackgroundTasks;
 using Coinbase.Core.Integration;
-using Coinbase.Core.Providers;
 using Coinbase.Data;
 using Coinbase.Data.AutoMapper;
 using Coinbase.Integration;
-using Coinbase.Providers;
-using Coinbase.Web.Api.Services;
+using Hub.HostedServices.Tasks;
+using Hub.HostedServices.TimerHost;
 using Hub.Storage.Repository.AutoMapper;
-using Hub.Web.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Coinbase.Web.Api
+namespace Coinbase.BackgroundWorker
 {
     public class DependencyRegistrationFactory : DependencyRegistrationFactoryBase<CoinbaseDbContext>
     {
-        public DependencyRegistrationFactory() : base("SQL_DB_COINBASE", "Coinbase.Data")
-        {
-        }
-
         protected override void AddDomainDependencies(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            serviceCollection.TryAddTransient<IAccountProvider, AccountProvider>();
-            serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
-            serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
-            serviceCollection.TryAddTransient<IAccountService, AccountService>();
-            serviceCollection.TryAddScoped<UpdateAccountsTask>();
-            serviceCollection.TryAddScoped<ICoinbaseConnector, CoinbaseConnector>();
-            
+            serviceCollection.AddSingleton<IBackgroundTask, UpdateAccountsTask>();
+            serviceCollection.TryAddSingleton<ICoinbaseConnector, CoinbaseConnector>();
             serviceCollection.AddAutoMapper(c =>
             {
                 c.AddHostedServiceProfiles();

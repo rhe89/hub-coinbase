@@ -1,14 +1,10 @@
-using System.Runtime.Serialization;
-using Hub.Storage.Entities;
+using Hub.Storage.Core.Entities;
 
-namespace Coinbase.Data.Entities
+namespace Coinbase.Core.Entities
 {
-    [DataContract]
     public class Asset : EntityBase
     {
-        [DataMember]
         public long AccountId { get; set; }
-        [DataMember]
         public int Value { get; set; }
 
         public Account Account { get; set; }  

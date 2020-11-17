@@ -1,18 +1,16 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Coinbase.Data.Entities;
-using Coinbase.Dto.Workers;
-using Coinbase.Integration;
-using Hub.Storage.Repository;
+using Coinbase.Core.Dto.Data;
+using Coinbase.Core.Entities;
+using Coinbase.Core.Integration;
 using Hub.HostedServices.Tasks;
-using Hub.Storage.Factories;
-using Hub.Storage.Providers;
+using Hub.Storage.Core.Factories;
+using Hub.Storage.Core.Providers;
+using Hub.Storage.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace Coinbase.BackgroundTasks
 {
@@ -37,11 +35,11 @@ namespace Coinbase.BackgroundTasks
         {
             using var scope = _serviceScopeFactory.CreateScope();
 
-            using var dbRepository = scope.ServiceProvider.GetRequiredService<IScopedDbRepository>();
+            using var dbRepository = scope.ServiceProvider.GetRequiredService<IScopedHubDbRepository>();
 
-            var accountsInDb = await dbRepository.GetManyAsync<Account>();
+            var accountsInDb = await dbRepository.AllAsync<Account, AccountDto>();
 
-            var assets = await dbRepository.GetManyAsync<Asset>();
+            var assets = await dbRepository.AllAsync<Asset, AssetDto>();
 
             var accountsCount = accountsInDb.Count();
 
@@ -51,7 +49,7 @@ namespace Coinbase.BackgroundTasks
             {
                 _logger.LogInformation($"Updating account {counter++} of {accountsCount}: {dbAccount.Currency}.");
 
-                var correspondingCoinbaseAccount = GetAccount(dbAccount.Currency);
+                var correspondingCoinbaseAccount = _coinbaseConnector.GetAccountForCurrency(dbAccount.Currency);
 
                 if (correspondingCoinbaseAccount == null)
                 {
@@ -75,59 +73,19 @@ namespace Coinbase.BackgroundTasks
                 }
                 else
                 {
-                    var value = new Asset
+                    var value = new AssetDto
                     {
                         AccountId = dbAccount.Id,
                         Value = (int)correspondingCoinbaseAccount.NativeBalance
                     };
 
-                    dbRepository.Add(value);
+                    dbRepository.Add<Asset, AssetDto>(value);
                 }
             }
 
             _logger.LogInformation($"Done updating cryptocurrencies.");
 
             await dbRepository.SaveChangesAsync();
-        }
-        
-        private AccountDto GetAccount(string currency)
-        {
-            var account = _coinbaseConnector.GetAccountForCurrency(currency);
-
-            if (account == null)
-            {
-                return null;
-            }
-
-            var nativeBalance = "";
-            var balance = "";
-            var createdDate = DateTime.MaxValue;
-
-            if (account.Data.ExtraData.TryGetValue("native_balance", out var jTokenObject))
-            {
-                nativeBalance = jTokenObject["amount"].Value<string>();
-            }
-            
-            if (account.Data.ExtraData.TryGetValue("balance", out jTokenObject))
-            {
-                balance = jTokenObject["amount"].Value<string>();
-            }
-
-            if (account.Data.ExtraData.TryGetValue("created_at", out jTokenObject))
-            {
-                DateTime.TryParse((string)jTokenObject, out createdDate);
-            }
-
-            var nativeBalanceParsed = decimal.Parse(nativeBalance, CultureInfo.InvariantCulture);
-            var balanceParsed = decimal.Parse(balance, CultureInfo.InvariantCulture);
-
-            return new AccountDto
-            {
-                Currency = currency,
-                NativeBalance = nativeBalanceParsed,
-                Assets = balanceParsed,
-                CreatedDate = createdDate
-            };
         }
     }
 }

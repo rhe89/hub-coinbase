@@ -1,5 +1,5 @@
 using Coinbase.Data;
-using Hub.Web.HostBuilder;
+using Hub.Web.Api;
 using Microsoft.Extensions.Hosting;
 
 namespace Coinbase.Web.Api
@@ -8,7 +8,16 @@ namespace Coinbase.Web.Api
     {
         public static void Main(string[] args)
         {
-            new ApiHostBuilder<Startup, DependencyRegistrationFactory, CoinbaseDbContext>().CreateHostBuilder(args);
+            CreateHostBuilder(args)
+                .Build()
+                .Run();
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return HostBuilder<DependencyRegistrationFactory, CoinbaseDbContext>
+                .Create(args);
+
         }
     }
 }

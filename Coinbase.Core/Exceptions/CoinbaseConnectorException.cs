@@ -1,6 +1,6 @@
 using System;
 
-namespace Coinbase.Integration
+namespace Coinbase.Core.Exceptions
 {
     public class CoinbaseConnectorException : Exception
     {

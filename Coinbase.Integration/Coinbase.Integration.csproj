@@ -5,9 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Coinbase" Version="3.0.1" />
-    <PackageReference Include="Hub.Storage.Providers" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Coinbase.Constants\Coinbase.Constants.csproj" />
+    <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
   </ItemGroup>
 </Project>

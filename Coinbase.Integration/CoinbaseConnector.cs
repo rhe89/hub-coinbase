@@ -1,8 +1,13 @@
 using Coinbase.ObjectModel;
 using System;
+using System.Globalization;
 using System.Linq;
-using Coinbase.Constants;
-using Hub.Storage.Providers;
+using Coinbase.Core.Constants;
+using Coinbase.Core.Dto.Integration;
+using Coinbase.Core.Exceptions;
+using Coinbase.Core.Integration;
+using Hub.Storage.Core.Providers;
+using Newtonsoft.Json.Linq;
 
 namespace Coinbase.Integration
 {
@@ -17,7 +22,7 @@ namespace Coinbase.Integration
             _coinbaseApi = new CoinbaseApi(apiKey, apiSecret, false);
         }
 
-        public CoinbaseResponse<CoinbaseResponse> GetAccountForCurrency(string currency)
+        public CoinbaseAccount GetAccountForCurrency(string currency)
         {
             CoinbaseResponse<CoinbaseResponse> response;
 
@@ -49,7 +54,45 @@ namespace Coinbase.Integration
                 return null;
             }
 
-            return response;
+            return MapAccount(response, currency);
+        }
+
+        private CoinbaseAccount MapAccount(CoinbaseResponse<CoinbaseResponse> coinbaseResponse, string currency)
+        {
+            if (coinbaseResponse == null)
+            {
+                return null;
+            }
+
+            var nativeBalance = "";
+            var balance = "";
+            var createdDate = DateTime.MaxValue;
+
+            if (coinbaseResponse.Data.ExtraData.TryGetValue("native_balance", out var jTokenObject))
+            {
+                nativeBalance = jTokenObject["amount"].Value<string>();
+            }
+            
+            if (coinbaseResponse.Data.ExtraData.TryGetValue("balance", out jTokenObject))
+            {
+                balance = jTokenObject["amount"].Value<string>();
+            }
+
+            if (coinbaseResponse.Data.ExtraData.TryGetValue("created_at", out jTokenObject))
+            {
+                DateTime.TryParse((string)jTokenObject, out createdDate);
+            }
+
+            var nativeBalanceParsed = decimal.Parse(nativeBalance, CultureInfo.InvariantCulture);
+            var balanceParsed = decimal.Parse(balance, CultureInfo.InvariantCulture);
+
+            return new CoinbaseAccount
+            {
+                Currency = currency,
+                NativeBalance = nativeBalanceParsed,
+                Assets = balanceParsed,
+                CreatedDate = createdDate
+            };
         }
     }
 }

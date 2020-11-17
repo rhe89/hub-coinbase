@@ -1,6 +1,6 @@
 using System;
 
-namespace Coinbase.Dto.Api
+namespace Coinbase.Core.Dto.Api
 {
     public class AssetDto
     {

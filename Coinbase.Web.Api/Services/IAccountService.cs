@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Coinbase.Dto.Api;
+using Coinbase.Core.Dto.Api;
 
-namespace Coinbase.Providers
+namespace Coinbase.Web.Api.Services
 {
-    public interface IAccountProvider
+    public interface IAccountService
     {
         Task<IList<AccountDto>> GetAccounts();
     }

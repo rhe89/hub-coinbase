@@ -1,3 +1,5 @@
+using Coinbase.Data;
+using Hub.HostedServices.TimerHost;
 using Microsoft.Extensions.Hosting;
 
 namespace Coinbase.BackgroundWorker
@@ -6,7 +8,10 @@ namespace Coinbase.BackgroundWorker
     {
         public static void Main(string[] args)
         {
-            new CoinbaseWorkerTimerHostBuilder(args).Build().Run();
+            new BackgroundWorker<DependencyRegistrationFactory, CoinbaseDbContext>(args,"SQL_DB_COINBASE")
+                .CreateHostBuilder()
+                .Build()
+                .Run();
         }
     }
 }

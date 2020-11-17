@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using Coinbase.Providers;
+using Coinbase.Web.Api.Services;
 
 namespace Coinbase.Web.Api.Controllers
 {
@@ -9,12 +9,12 @@ namespace Coinbase.Web.Api.Controllers
     [Route("api/[controller]")]
     public class AssetsController : ControllerBase
     {
-        private readonly IAssetsProvider _assetsProvider;
+        private readonly IAssetsService _assetsService;
         private readonly ILogger<AssetsController> _logger;
 
-        public AssetsController(IAssetsProvider assetsProvider, ILogger<AssetsController> logger)
+        public AssetsController(IAssetsService assetsService, ILogger<AssetsController> logger)
         {
-            _assetsProvider = assetsProvider;
+            _assetsService = assetsService;
             _logger = logger;
         }
 
@@ -23,7 +23,7 @@ namespace Coinbase.Web.Api.Controllers
         {
             _logger.LogInformation("Request received");
 
-            var assets = await _assetsProvider.GetAssets();
+            var assets = await _assetsService.GetAssets();
 
             return Ok(assets);
         }

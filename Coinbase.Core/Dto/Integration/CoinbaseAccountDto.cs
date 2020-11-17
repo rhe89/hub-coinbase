@@ -1,8 +1,8 @@
 using System;
 
-namespace Coinbase.Dto.Workers
+namespace Coinbase.Core.Dto.Integration
 {
-    public class AccountDto
+    public class CoinbaseAccount
     {
         public string Currency { get; set; }
         public decimal Assets { get; set; }

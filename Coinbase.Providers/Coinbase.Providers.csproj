@@ -5,12 +5,11 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
-      <ProjectReference Include="..\Coinbase.Dto\Coinbase.Dto.csproj" />
+      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Hub.Storage.Providers" Version="1.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     </ItemGroup>
 
 </Project>

@@ -2,10 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <UserSecretsId>dotnet-Coinbase.BackgroundWorker-96E20372-6763-4576-86DE-275488976355</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Coinbase.BackgroundTasks\Coinbase.BackgroundTasks.csproj" />
+      <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     </ItemGroup>
 </Project>
