@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Coinbase.Web.Api
 {
-    public class DependencyRegistrationFactory : DependencyRegistrationFactoryBase<CoinbaseDbContext>
+    public class DependencyRegistrationFactory : DependencyRegistrationFactoryWithHostedServiceBase<CoinbaseDbContext>
     {
         public DependencyRegistrationFactory() : base("SQL_DB_COINBASE", "Coinbase.Data")
         {
@@ -25,7 +25,7 @@ namespace Coinbase.Web.Api
         {
             serviceCollection.TryAddTransient<IAccountProvider, AccountProvider>();
             serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
-            serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
+            serviceCollection.TryAddTransient<IAssetsService, AssetsService>();
             serviceCollection.TryAddTransient<IAccountService, AccountService>();
             serviceCollection.TryAddScoped<UpdateAccountsTask>();
             serviceCollection.TryAddScoped<ICoinbaseConnector, CoinbaseConnector>();

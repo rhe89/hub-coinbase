@@ -16,30 +16,29 @@ namespace Coinbase.BackgroundTasks
 {
     public class UpdateAccountsTask : BackgroundTask
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger<UpdateAccountsTask> _logger;
         private readonly ICoinbaseConnector _coinbaseConnector;
+        private readonly IHubDbRepository _dbRepository;
 
         public UpdateAccountsTask(IBackgroundTaskConfigurationProvider backgroundTaskConfigurationProvider,
             IBackgroundTaskConfigurationFactory backgroundTaskConfigurationFactory,
             IServiceScopeFactory serviceScopeFactory, 
             ILogger<UpdateAccountsTask> logger,
-            ICoinbaseConnector coinbaseConnector) : base(backgroundTaskConfigurationProvider, backgroundTaskConfigurationFactory)
+            ICoinbaseConnector coinbaseConnector,
+            IHubDbRepository dbRepository) : base(backgroundTaskConfigurationProvider, backgroundTaskConfigurationFactory)
         {
-            _serviceScopeFactory = serviceScopeFactory;
             _logger = logger;
             _coinbaseConnector = coinbaseConnector;
+            _dbRepository = dbRepository;
         }
 
         public override async Task Execute(CancellationToken cancellationToken)
         {
-            using var scope = _serviceScopeFactory.CreateScope();
+            _dbRepository.ToggleDispose(false);
 
-            using var dbRepository = scope.ServiceProvider.GetRequiredService<IScopedHubDbRepository>();
-
-            var accountsInDb = await dbRepository.AllAsync<Account, AccountDto>();
-
-            var assets = await dbRepository.AllAsync<Asset, AssetDto>();
+            var accountsInDb = await _dbRepository.AllAsync<Account, AccountDto>();
+            
+            var assets = await _dbRepository.AllAsync<Asset, AssetDto>();
 
             var accountsCount = accountsInDb.Count();
 
@@ -79,13 +78,15 @@ namespace Coinbase.BackgroundTasks
                         Value = (int)correspondingCoinbaseAccount.NativeBalance
                     };
 
-                    dbRepository.Add<Asset, AssetDto>(value);
+                    _dbRepository.Add<Asset, AssetDto>(value);
                 }
             }
 
             _logger.LogInformation($"Done updating cryptocurrencies.");
+            
+            _dbRepository.ToggleDispose(false);
 
-            await dbRepository.SaveChangesAsync();
+            await _dbRepository.SaveChangesAsync();
         }
     }
 }
