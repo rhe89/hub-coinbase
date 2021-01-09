@@ -22,7 +22,6 @@ namespace Coinbase.BackgroundTasks
 
         public UpdateAccountsTask(IBackgroundTaskConfigurationProvider backgroundTaskConfigurationProvider,
             IBackgroundTaskConfigurationFactory backgroundTaskConfigurationFactory,
-            IServiceScopeFactory serviceScopeFactory, 
             ILogger<UpdateAccountsTask> logger,
             ICoinbaseConnector coinbaseConnector,
             IHubDbRepository dbRepository) : base(backgroundTaskConfigurationProvider, backgroundTaskConfigurationFactory)
@@ -40,7 +39,7 @@ namespace Coinbase.BackgroundTasks
             
             var assets = await _dbRepository.AllAsync<Asset, AssetDto>();
 
-            var accountsCount = accountsInDb.Count();
+            var accountsCount = accountsInDb.Count;
 
             var counter = 1;
 
@@ -68,12 +67,17 @@ namespace Coinbase.BackgroundTasks
 
                 if (existingAsset != null)
                 {
+                    
+                    _logger.LogInformation($"Updating assets for currency {dbAccount.Currency}");
+
                     existingAsset.Value = (int)correspondingCoinbaseAccount.NativeBalance;
                     
                     _dbRepository.Update<Asset, AssetDto>(existingAsset);
                 }
                 else
                 {
+                    _logger.LogInformation($"Adding assets for currency {dbAccount.Currency}");
+
                     var asset = new AssetDto
                     {
                         AccountId = dbAccount.Id,
@@ -86,7 +90,7 @@ namespace Coinbase.BackgroundTasks
 
             _logger.LogInformation($"Done updating cryptocurrencies.");
             
-            _dbRepository.ToggleDispose(false);
+            _dbRepository.ToggleDispose(true);
 
             await _dbRepository.SaveChangesAsync();
         }
