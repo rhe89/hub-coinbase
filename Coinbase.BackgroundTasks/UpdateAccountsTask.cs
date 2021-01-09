@@ -62,23 +62,25 @@ namespace Coinbase.BackgroundTasks
                     continue;
                 }
 
-                var existingValue = assets.FirstOrDefault(x => 
+                var existingAsset = assets.FirstOrDefault(x => 
                     x.CreatedDate.Date == DateTime.Now.Date && 
                     x.AccountId == dbAccount.Id);
 
-                if (existingValue != null)
+                if (existingAsset != null)
                 {
-                    existingValue.Value = (int)correspondingCoinbaseAccount.NativeBalance;
+                    existingAsset.Value = (int)correspondingCoinbaseAccount.NativeBalance;
+                    
+                    _dbRepository.Update<Asset, AssetDto>(existingAsset);
                 }
                 else
                 {
-                    var value = new AssetDto
+                    var asset = new AssetDto
                     {
                         AccountId = dbAccount.Id,
                         Value = (int)correspondingCoinbaseAccount.NativeBalance
                     };
 
-                    _dbRepository.Add<Asset, AssetDto>(value);
+                    _dbRepository.Add<Asset, AssetDto>(asset);
                 }
             }
 
