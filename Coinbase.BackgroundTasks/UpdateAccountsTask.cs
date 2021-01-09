@@ -9,7 +9,6 @@ using Hub.HostedServices.Tasks;
 using Hub.Storage.Core.Factories;
 using Hub.Storage.Core.Providers;
 using Hub.Storage.Core.Repository;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Coinbase.BackgroundTasks
@@ -35,9 +34,27 @@ namespace Coinbase.BackgroundTasks
         {
             _dbRepository.ToggleDispose(false);
 
+            try
+            {
+                await UpdateAccountAssets();
+
+                _dbRepository.ToggleDispose(true);
+
+                await _dbRepository.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                _dbRepository.ToggleDispose(true);
+
+                throw;
+            }
+        }
+
+        private async Task UpdateAccountAssets()
+        {
             var accountsInDb = await _dbRepository.AllAsync<Account, AccountDto>();
-            
-            var assets = await _dbRepository.AllAsync<Asset, AssetDto>();
+
+            var assets = _dbRepository.All<Asset, AssetDto>();
 
             var accountsCount = accountsInDb.Count;
 
@@ -61,17 +78,16 @@ namespace Coinbase.BackgroundTasks
                     continue;
                 }
 
-                var existingAsset = assets.FirstOrDefault(x => 
-                    x.CreatedDate.Date == DateTime.Now.Date && 
+                var existingAsset = assets.FirstOrDefault(x =>
+                    x.CreatedDate.Date == DateTime.Now.Date &&
                     x.AccountId == dbAccount.Id);
 
                 if (existingAsset != null)
                 {
-                    
-                    _logger.LogInformation($"Updating assets for currency {dbAccount.Currency}");
+                    _logger.LogInformation($"Updating assets for {dbAccount.Currency}");
 
-                    existingAsset.Value = (int)correspondingCoinbaseAccount.NativeBalance;
-                    
+                    existingAsset.Value = (int) correspondingCoinbaseAccount.NativeBalance;
+
                     _dbRepository.Update<Asset, AssetDto>(existingAsset);
                 }
                 else
@@ -81,7 +97,7 @@ namespace Coinbase.BackgroundTasks
                     var asset = new AssetDto
                     {
                         AccountId = dbAccount.Id,
-                        Value = (int)correspondingCoinbaseAccount.NativeBalance
+                        Value = (int) correspondingCoinbaseAccount.NativeBalance
                     };
 
                     _dbRepository.Add<Asset, AssetDto>(asset);
@@ -89,10 +105,6 @@ namespace Coinbase.BackgroundTasks
             }
 
             _logger.LogInformation($"Done updating cryptocurrencies.");
-            
-            _dbRepository.ToggleDispose(true);
-
-            await _dbRepository.SaveChangesAsync();
         }
     }
 }
