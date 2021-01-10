@@ -2,14 +2,17 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
+using Coinbase.Core.Exceptions;
 using Coinbase.Core.Integration;
 using Hub.HostedServices.Tasks;
 using Hub.Storage.Core.Factories;
 using Hub.Storage.Core.Providers;
 using Hub.Storage.Core.Repository;
 using Microsoft.Extensions.Logging;
+using Account = Coinbase.Core.Entities.Account;
+using AccountDto = Coinbase.Core.Dto.Data.AccountDto;
+using AssetDto = Coinbase.Core.Dto.Data.AssetDto;
 
 namespace Coinbase.BackgroundTasks
 {
@@ -54,7 +57,9 @@ namespace Coinbase.BackgroundTasks
         {
             var accountsInDb = await _dbRepository.AllAsync<Account, AccountDto>();
 
-            var assets = _dbRepository.All<Asset, AssetDto>();
+            var assets = await _dbRepository.AllAsync<Asset, AssetDto>();
+
+            var coinbaseAccounts = await  _coinbaseConnector.GetAccounts();
 
             var accountsCount = accountsInDb.Count;
 
@@ -64,7 +69,8 @@ namespace Coinbase.BackgroundTasks
             {
                 _logger.LogInformation($"Updating account {counter++} of {accountsCount}: {dbAccount.Currency}.");
 
-                var correspondingCoinbaseAccount = _coinbaseConnector.GetAccountForCurrency(dbAccount.Currency);
+                var correspondingCoinbaseAccount =
+                    coinbaseAccounts.FirstOrDefault(x => x.Currency.Code == dbAccount.Currency);
 
                 if (correspondingCoinbaseAccount == null)
                 {
@@ -72,7 +78,7 @@ namespace Coinbase.BackgroundTasks
                     continue;
                 }
 
-                if (correspondingCoinbaseAccount.NativeBalance == 0)
+                if (correspondingCoinbaseAccount.Balance.Amount == 0)
                 {
                     _logger.LogInformation($"Assets is 0. Skipping account {dbAccount.Currency}.");
                     continue;
@@ -82,11 +88,15 @@ namespace Coinbase.BackgroundTasks
                     x.CreatedDate.Date == DateTime.Now.Date &&
                     x.AccountId == dbAccount.Id);
 
+                var exchangeRateInNok = await GetExchangeRateInNok(dbAccount.Currency);
+
+                var valueInNok = (int) (correspondingCoinbaseAccount.Balance.Amount * exchangeRateInNok);
+
                 if (existingAsset != null)
                 {
                     _logger.LogInformation($"Updating assets for {dbAccount.Currency}");
 
-                    existingAsset.Value = (int) correspondingCoinbaseAccount.NativeBalance;
+                    existingAsset.Value = valueInNok;
 
                     _dbRepository.Update<Asset, AssetDto>(existingAsset);
                 }
@@ -97,7 +107,7 @@ namespace Coinbase.BackgroundTasks
                     var asset = new AssetDto
                     {
                         AccountId = dbAccount.Id,
-                        Value = (int) correspondingCoinbaseAccount.NativeBalance
+                        Value = valueInNok
                     };
 
                     _dbRepository.Add<Asset, AssetDto>(asset);
@@ -105,6 +115,22 @@ namespace Coinbase.BackgroundTasks
             }
 
             _logger.LogInformation($"Done updating cryptocurrencies.");
+        }
+        
+        private async Task<decimal> GetExchangeRateInNok(string currency)
+        {
+            var exchangeRates = await _coinbaseConnector.GetExchangeRatesForCurrency(currency);
+            
+            var hasExchangeRateInNok = exchangeRates.Rates.TryGetValue("NOK", out var exchangeRateInNok);
+
+            if (!hasExchangeRateInNok)
+            {
+                throw new CoinbaseConnectorException(
+                    $"Error occured when getting exchange rates for {currency} from Coinbase. No exchange rate in NOK exists.");
+            }
+            
+            return exchangeRateInNok;
+            
         }
     }
 }

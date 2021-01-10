@@ -1,9 +1,12 @@
-﻿using Coinbase.Core.Dto.Integration;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Coinbase.Models;
 
 namespace Coinbase.Core.Integration
 {
     public interface ICoinbaseConnector
     {
-        CoinbaseAccount GetAccountForCurrency(string currency);
+        Task<IList<Account>> GetAccounts();
+        Task<ExchangeRates> GetExchangeRatesForCurrency(string currency);
     }
 }

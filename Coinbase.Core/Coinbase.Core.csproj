@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Coinbase" Version="5.1.2" />
       <PackageReference Include="Hub.Storage.Core" Version="1.0.9" />
     </ItemGroup>
 

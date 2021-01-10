@@ -50,16 +50,6 @@ namespace Coinbase.Web.Api.Services
                 });
             }
 
-            var total = new AccountDto
-            {
-                Name = "Total",
-                Balance = accountDtos.Sum(x => x.Balance),
-                LastMonthBalance = accountDtos.Sum(x => x.LastMonthBalance),
-                LastYearBalance = accountDtos.Sum(x => x.LastYearBalance)
-            };
-            
-            accountDtos.Add(total);
-
             return accountDtos;
         }
     }

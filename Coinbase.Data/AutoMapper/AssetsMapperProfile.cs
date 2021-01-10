@@ -9,7 +9,7 @@ namespace Coinbase.Data.AutoMapper
         public AssetsMapperProfile()
         {
             CreateMap<Asset, AssetDto>()
-                .ForMember(x => x.Account, y => y.Ignore())
+                .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ReverseMap();
         }
     }

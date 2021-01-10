@@ -27,6 +27,7 @@ namespace Coinbase.Web.Api
             serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
             serviceCollection.TryAddTransient<IAssetsService, AssetsService>();
             serviceCollection.TryAddTransient<IAccountService, AccountService>();
+            serviceCollection.TryAddTransient<IExchangeRatesService, ExchangeRatesService>();
             serviceCollection.TryAddScoped<UpdateAccountsTask>();
             serviceCollection.TryAddScoped<ICoinbaseConnector, CoinbaseConnector>();
             
