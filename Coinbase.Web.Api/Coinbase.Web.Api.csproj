@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Coinbase.BackgroundTasks\Coinbase.BackgroundTasks.csproj" />
     <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+    <ProjectReference Include="..\Coinbase.Factories\Coinbase.Factories.csproj" />
     <ProjectReference Include="..\Coinbase.Providers\Coinbase.Providers.csproj" />
   </ItemGroup>
 

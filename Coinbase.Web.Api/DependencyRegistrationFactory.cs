@@ -1,9 +1,11 @@
 using AutoMapper;
 using Coinbase.BackgroundTasks;
+using Coinbase.Core.Factories;
 using Coinbase.Core.Integration;
 using Coinbase.Core.Providers;
 using Coinbase.Data;
 using Coinbase.Data.AutoMapper;
+using Coinbase.Factories;
 using Coinbase.Integration;
 using Coinbase.Providers;
 using Coinbase.Web.Api.Services;
@@ -28,8 +30,11 @@ namespace Coinbase.Web.Api
             serviceCollection.TryAddTransient<IAssetsService, AssetsService>();
             serviceCollection.TryAddTransient<IAccountService, AccountService>();
             serviceCollection.TryAddTransient<IExchangeRatesService, ExchangeRatesService>();
-            serviceCollection.TryAddScoped<UpdateAccountsTask>();
+            serviceCollection.TryAddTransient<IExchangeRateProvider, ExchangeRateProvider>();
+            serviceCollection.TryAddTransient<IExchangeRateFactory, ExchangeRateFactory>();
             serviceCollection.TryAddScoped<ICoinbaseConnector, CoinbaseConnector>();
+            serviceCollection.TryAddScoped<UpdateAccountsTask>();
+            serviceCollection.TryAddScoped<UpdateExchangeRatesTask>();
             
             serviceCollection.AddAutoMapper(c =>
             {

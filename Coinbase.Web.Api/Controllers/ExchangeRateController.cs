@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Coinbase.Web.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Coinbase.Web.Api.Controllers
 {
@@ -10,17 +9,22 @@ namespace Coinbase.Web.Api.Controllers
     public class ExchangeRatesController : ControllerBase
     {
         private readonly IExchangeRatesService _exchangeRatesService;
-        private readonly ILogger<ExchangeRatesController> _logger;
 
-        public ExchangeRatesController(IExchangeRatesService exchangeRatesService,
-            ILogger<ExchangeRatesController> logger)
+        public ExchangeRatesController(IExchangeRatesService exchangeRatesService)
         {
             _exchangeRatesService = exchangeRatesService;
-            _logger = logger;
         }
         
         [HttpGet("exchangerates")]
-        public async Task<IActionResult> Assets(string currency)
+        public async Task<IActionResult> ExchangeRates()
+        {
+            var assets = await _exchangeRatesService.GetExchangeRates();
+
+            return Ok(assets);
+        }
+        
+        [HttpGet("exchangerate")]
+        public async Task<IActionResult> ExchangeRate(string currency)
         {
             var assets = await _exchangeRatesService.GetExchangeRateForCurrency(currency);
 

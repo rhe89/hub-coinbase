@@ -55,7 +55,7 @@ namespace Coinbase.Integration
             }
             catch (Exception e)
             {
-                throw new CoinbaseConnectorException("CoinbaseConnector: Error sending request to Coinbase API", e);
+                throw new CoinbaseConnectorException($"CoinbaseConnector: Error sending request to Coinbase API {e.Message}", e);
             }
             
             ValidateResponse(response);

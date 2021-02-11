@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.BackgroundWorker",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Core", "Coinbase.Core\Coinbase.Core.csproj", "{D3B43E8A-CED2-4F98-A660-A57FE6A7FBDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.Factories", "Coinbase.Factories\Coinbase.Factories.csproj", "{F62D4391-B51A-44B5-913B-F4DCC8DCCE60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{D3B43E8A-CED2-4F98-A660-A57FE6A7FBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3B43E8A-CED2-4F98-A660-A57FE6A7FBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3B43E8A-CED2-4F98-A660-A57FE6A7FBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F62D4391-B51A-44B5-913B-F4DCC8DCCE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F62D4391-B51A-44B5-913B-F4DCC8DCCE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F62D4391-B51A-44B5-913B-F4DCC8DCCE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F62D4391-B51A-44B5-913B-F4DCC8DCCE60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{238B9A66-B542-4C6C-8208-0525E9AC3EC5} = {1C968321-ABCC-4544-BB67-7D65853ACDF0}

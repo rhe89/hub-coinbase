@@ -17,6 +17,9 @@ namespace Coinbase.Data
 
             builder.Entity<Asset>()
                 .ToTable(schema: "dbo", name: "Asset");
+            
+            builder.Entity<ExchangeRate>()
+                .ToTable(schema: "dbo", name: "ExchangeRate");
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Coinbase.Data.AutoMapper
         {
             mapperConfigurationExpression.AddProfile<AccountMapperProfile>();
             mapperConfigurationExpression.AddProfile<AssetsMapperProfile>();
+            mapperConfigurationExpression.AddProfile<ExchangeRateMapperProfile>();
 
             return mapperConfigurationExpression;
         }

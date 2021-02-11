@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Coinbase.Core.Constants;
 using Coinbase.Core.Entities;
-using Coinbase.Core.Exceptions;
 using Coinbase.Core.Integration;
 using Hub.HostedServices.Tasks;
 using Hub.Storage.Core.Factories;
@@ -115,12 +115,12 @@ namespace Coinbase.BackgroundTasks
         {
             var exchangeRates = await _coinbaseConnector.GetExchangeRatesForCurrency(currency);
             
-            var hasExchangeRateInNok = exchangeRates.Rates.TryGetValue("NOK", out var exchangeRateInNok);
+            var hasExchangeRateInNok = exchangeRates.Rates.TryGetValue(ExchangeRateConstants.NOK, out var exchangeRateInNok);
 
             if (!hasExchangeRateInNok)
             {
-                throw new CoinbaseConnectorException(
-                    $"Error occured when getting exchange rates for {currency} from Coinbase. No exchange rate in NOK exists.");
+                _logger.LogWarning(
+                    $"No exchange rates in {ExchangeRateConstants.NOK} for {currency} exists at Coinbase");
             }
             
             return exchangeRateInNok;

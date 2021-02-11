@@ -18,6 +18,7 @@ namespace Coinbase.BackgroundWorker
         protected override void AddDomainDependencies(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             serviceCollection.AddSingleton<IBackgroundTask, UpdateAccountsTask>();
+            serviceCollection.AddSingleton<IBackgroundTask, UpdateExchangeRatesTask>();
             serviceCollection.TryAddSingleton<ICoinbaseConnector, CoinbaseConnector>();
             serviceCollection.AddAutoMapper(c =>
             {

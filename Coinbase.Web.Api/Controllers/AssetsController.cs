@@ -15,7 +15,7 @@ namespace Coinbase.Web.Api.Controllers
             _assetsService = assetsService;
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         public async Task<IActionResult> Assets()
         {
             var assets = await _assetsService.GetAssets();
