@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Core.Constants;
@@ -35,33 +36,49 @@ namespace Coinbase.BackgroundTasks
             
             _logger.LogInformation($"Got {exchangeRatesInDb.Count} exchange rates from database");
             
+            var exchangeRatesCount = exchangeRatesInDb.Count;
+
+            var counter = 1;
+            
             foreach (var exchangeRateInDb in exchangeRatesInDb)
             {
-                _logger.LogInformation($"Updating {exchangeRateInDb.Currency}");
-                
-                var exchangeRateFromCoinbase =
-                    await _coinbaseConnector.GetExchangeRatesForCurrency(exchangeRateInDb.Currency);
+                _logger.LogInformation($"Updating account {counter++} of {exchangeRatesCount}: {exchangeRateInDb.Currency}.");
 
-                if (exchangeRateFromCoinbase == null)
+                try
                 {
-                    _logger.LogError($"Data from Coinbase for exchange rate {exchangeRateInDb.Currency} was null");
-                    continue;
+                    await UpdateExchangeRate(exchangeRateInDb);
                 }
-                
-                var nokRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.NOK];
-                var usdRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.USD];
-                var eurRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.EUR];
-
-                exchangeRateInDb.NOKRate = nokRate;
-                exchangeRateInDb.USDRate = usdRate;
-                exchangeRateInDb.EURRate = eurRate;
+                catch (Exception e)
+                {
+                    _logger.LogWarning($"Failed updating exchange rate {exchangeRateInDb.Currency}. Continuing", e.Message);
+                }
             }
             
-            _dbRepository.BulkUpdate<ExchangeRate, ExchangeRateDto>(exchangeRatesInDb);
-            
-            await _dbRepository.SaveChangesAsync();
+            await _dbRepository.ExecuteQueueAsync();
             
             _logger.LogInformation($"Finished updating {exchangeRatesInDb.Count} exchange rates");
+        }
+
+        private async Task UpdateExchangeRate(ExchangeRateDto exchangeRateInDb)
+        {
+            var exchangeRateFromCoinbase =
+                await _coinbaseConnector.GetExchangeRatesForCurrency(exchangeRateInDb.Currency);
+
+            if (exchangeRateFromCoinbase == null)
+            {
+                _logger.LogError($"Data from Coinbase for exchange rate {exchangeRateInDb.Currency} was null");
+                return;
+            }
+
+            var nokRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.NOK];
+            var usdRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.USD];
+            var eurRate = exchangeRateFromCoinbase.Rates[ExchangeRateConstants.EUR];
+
+            exchangeRateInDb.NOKRate = nokRate;
+            exchangeRateInDb.USDRate = usdRate;
+            exchangeRateInDb.EURRate = eurRate;
+
+            _dbRepository.QueueUpdate<ExchangeRate, ExchangeRateDto>(exchangeRateInDb);
         }
     }
 }

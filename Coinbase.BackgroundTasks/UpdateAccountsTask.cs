@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,22 +36,7 @@ namespace Coinbase.BackgroundTasks
 
         public override async Task Execute(CancellationToken cancellationToken)
         {
-            _dbRepository.ToggleDispose(false);
-
-            try
-            {
-                await UpdateAccountAssets();
-
-                _dbRepository.ToggleDispose(true);
-
-                await _dbRepository.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                _dbRepository.ToggleDispose(true);
-
-                throw;
-            }
+            await UpdateAccountAssets();
         }
 
         private async Task UpdateAccountAssets()
@@ -69,48 +55,62 @@ namespace Coinbase.BackgroundTasks
             {
                 _logger.LogInformation($"Updating account {counter++} of {accountsCount}: {dbAccount.Currency}.");
 
-                var correspondingCoinbaseAccount =
-                    coinbaseAccounts.FirstOrDefault(x => x.Currency.Code == dbAccount.Currency);
-
-                if (correspondingCoinbaseAccount == null)
+                try
                 {
-                    _logger.LogInformation($"Couldn't get account {dbAccount.Currency} from Coinbase. Skipping.");
-                    continue;
+                    await UpdateAccount(coinbaseAccounts, dbAccount, assets);
                 }
-
-                var existingAsset = assets.FirstOrDefault(x =>
-                    x.CreatedDate.Date == DateTime.Now.Date &&
-                    x.AccountId == dbAccount.Id);
-
-                var exchangeRateInNok = await GetExchangeRateInNok(dbAccount.Currency);
-
-                var valueInNok = (int) (correspondingCoinbaseAccount.Balance.Amount * exchangeRateInNok);
-
-                if (existingAsset != null)
+                catch (Exception e)
                 {
-                    _logger.LogInformation($"Updating assets for {dbAccount.Currency}");
-
-                    existingAsset.Value = valueInNok;
-
-                    _dbRepository.Update<Asset, AssetDto>(existingAsset);
-                }
-                else
-                {
-                    _logger.LogInformation($"Adding assets for currency {dbAccount.Currency}");
-
-                    var asset = new AssetDto
-                    {
-                        AccountId = dbAccount.Id,
-                        Value = valueInNok
-                    };
-
-                    _dbRepository.Add<Asset, AssetDto>(asset);
+                    _logger.LogWarning($"Failed updating account {dbAccount.Currency}. Continuing", e.Message);
                 }
             }
 
+            await _dbRepository.ExecuteQueueAsync();
+            
             _logger.LogInformation($"Done updating cryptocurrencies.");
         }
-        
+
+        private async Task UpdateAccount(IList<Models.Account> coinbaseAccounts, AccountDto dbAccount, IList<AssetDto> assets)
+        {
+            var correspondingCoinbaseAccount =
+                coinbaseAccounts.FirstOrDefault(x => x.Currency.Code == dbAccount.Currency);
+
+            if (correspondingCoinbaseAccount == null)
+            {
+                _logger.LogInformation($"Couldn't get account {dbAccount.Currency} from Coinbase. Skipping.");
+                return;
+            }
+
+            var existingAsset = assets.FirstOrDefault(x =>
+                x.CreatedDate.Date == DateTime.Now.Date &&
+                x.AccountId == dbAccount.Id);
+
+            var exchangeRateInNok = await GetExchangeRateInNok(dbAccount.Currency);
+
+            var valueInNok = (int) (correspondingCoinbaseAccount.Balance.Amount * exchangeRateInNok);
+
+            if (existingAsset != null)
+            {
+                _logger.LogInformation($"Updating assets for {dbAccount.Currency}");
+
+                existingAsset.Value = valueInNok;
+
+                _dbRepository.QueueUpdate<Asset, AssetDto>(existingAsset);
+            }
+            else
+            {
+                _logger.LogInformation($"Adding assets for currency {dbAccount.Currency}");
+
+                var asset = new AssetDto
+                {
+                    AccountId = dbAccount.Id,
+                    Value = valueInNok
+                };
+
+                _dbRepository.QueueAdd<Asset, AssetDto>(asset);
+            }
+        }
+
         private async Task<decimal> GetExchangeRateInNok(string currency)
         {
             var exchangeRates = await _coinbaseConnector.GetExchangeRatesForCurrency(currency);

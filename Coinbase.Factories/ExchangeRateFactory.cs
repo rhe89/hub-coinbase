@@ -26,8 +26,6 @@ namespace Coinbase.Factories
 
             var exchangeRate = _dbRepository.Add<ExchangeRate, ExchangeRateDto>(exchangeRateDto);
             
-            _dbRepository.SaveChanges();
-
             return exchangeRate == null ? null : _dbRepository.Map<ExchangeRate, ExchangeRateDto>(exchangeRate);
         }
     }
