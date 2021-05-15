@@ -6,18 +6,18 @@ services:
         build:
             context: ./
             dockerfile: Coinbase.HostedServices.ServiceBusQueueHost/Dockerfile
-        image: "rhe89/coinbase-service-bus-queue-host"
+        image: "rhe89/hub-coinbase-service-bus-queue-host"
 
     coinbase-scheduled-host:
         container_name: "coinbase_scheduled_host"
         build:
             context: ./
             dockerfile: Coinbase.HostedServices.ScheduledHost/Dockerfile
-        image: "rhe89/coinbase-scheduled-host"
+        image: "rhe89/hub-coinbase-scheduled-host"
 
     coinbase-api:
         container_name: "coinbase_api"
         build: 
             context: ./
-            dockerfile: coinbase.Web.Api/Dockerfile
+            dockerfile: Coinbase.Web.Api/Dockerfile
         image: "rhe89/hub-coinbase-api"
