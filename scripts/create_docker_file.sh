@@ -52,20 +52,20 @@ done
 
 echo "" >> Dockerfile
 
-echo RUN dotnet nuget add source https://rhe89.pkgs.visualstudio.com/_packaging/rhe89/nuget/v3/index.json -n azuredevopsartifacts -u rhe89 -p "$nuget_access_token" --store-password-in-clear-text >> Dockerfile
-
-echo "" >> Dockerfile
-
-echo RUN dotnet restore ./"$project_name"/"$project_name".Deploy.csproj -p:HideWarningsAndErrors=true -p:EmitAssetsLogMessages=false >> Dockerfile
-
-echo "" >> Dockerfile
-
 echo COPY /"$project_name"/ ./"$project_name"/ >> Dockerfile
 
 for project_reference in "${project_references_unique[@]}"
 do 
     echo COPY /"$project_reference"/ ./"$project_reference"/ >> Dockerfile
 done
+
+echo "" >> Dockerfile
+
+echo RUN dotnet nuget add source https://rhe89.pkgs.visualstudio.com/_packaging/rhe89/nuget/v3/index.json -n azuredevopsartifacts -u rhe89 -p "$nuget_access_token" --store-password-in-clear-text >> Dockerfile
+
+echo "" >> Dockerfile
+
+echo RUN dotnet restore ./"$project_name"/"$project_name".Deploy.csproj -p:HideWarningsAndErrors=true -p:EmitAssetsLogMessages=false >> Dockerfile
 
 echo "" >> Dockerfile
 
