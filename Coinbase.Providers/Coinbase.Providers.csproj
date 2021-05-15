@@ -9,7 +9,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Coinbase.Core\Coinbase.Core.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
 	</ItemGroup>
 
 </Project>

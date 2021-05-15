@@ -10,8 +10,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Coinbase.Core\Coinbase.Core.Deploy.csproj" />
-		<ProjectReference Include="..\Coinbase.Data\Coinbase.Data.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
+		<ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
 	</ItemGroup>
 
 </Project>

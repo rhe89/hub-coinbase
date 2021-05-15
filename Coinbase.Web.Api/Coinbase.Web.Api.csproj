@@ -9,10 +9,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Coinbase.Data\Coinbase.Data.Deploy.csproj" />
-		<ProjectReference Include="..\Coinbase.Factories\Coinbase.Factories.Deploy.csproj" />
-		<ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.Deploy.csproj" />
-		<ProjectReference Include="..\Coinbase.Providers\Coinbase.Providers.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+		<ProjectReference Include="..\Coinbase.Factories\Coinbase.Factories.csproj" />
+		<ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.csproj" />
+		<ProjectReference Include="..\Coinbase.Providers\Coinbase.Providers.csproj" />
 	</ItemGroup>
 
 </Project>
