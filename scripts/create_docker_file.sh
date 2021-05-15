@@ -12,17 +12,17 @@ read_project_file()
 
         ref=${line##*\\}
         ref=${ref##*=}
+        ref=${ref%.Deploy*}
         ref=${ref%.csproj*}
         
-        echo "$(read_project_file $(find ../$ref/$ref.csproj))"
+        echo "$(read_project_file $(find ../$ref/$ref.Deploy.csproj))"
 
-        echo "$ref"
     fi
     done < "$csproj_file"
 }
 
 #Find project file in folder
-csproj_file=$(find ./*.csproj)
+csproj_file=$(find ./*.Deploy.csproj)
 
 project_name=${csproj_file##./}
 project_name=${project_name%.csproj*}
@@ -41,11 +41,11 @@ echo WORKDIR /app >> Dockerfile
 
 echo "" >> Dockerfile
 
- echo COPY ./"$project_name"/"$project_name".csproj ./"$project_name"/"$project_name".csproj >> Dockerfile
+ echo COPY ./"$project_name"/"$project_name".Deploy.csproj ./"$project_name"/"$project_name".Deploy.csproj >> Dockerfile
 
 for project_reference in "${project_references_unique[@]}"
 do 
-    echo COPY ./"$project_reference"/"$project_reference".csproj ./"$project_reference"/"$project_reference".csproj >> Dockerfile
+    echo COPY ./"$project_reference"/"$project_reference".Deploy.csproj ./"$project_reference"/"$project_reference".Deploy.scsproj >> Dockerfile
 done
 
 echo "" >> Dockerfile
@@ -54,7 +54,7 @@ echo RUN dotnet nuget add source https://rhe89.pkgs.visualstudio.com/_packaging/
 
 echo "" >> Dockerfile
 
-echo RUN dotnet restore ./"$project_name"/"$project_name".csproj -p:HideWarningsAndErrors=true -p:EmitAssetsLogMessages=false >> Dockerfile
+echo RUN dotnet restore ./"$project_name"/"$project_name".Deploy.csproj -p:HideWarningsAndErrors=true -p:EmitAssetsLogMessages=false >> Dockerfile
 
 echo "" >> Dockerfile
 
