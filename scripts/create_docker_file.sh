@@ -8,15 +8,17 @@ read_project_file()
 
     while IFS= read -r line
     do
+
+
     if [[ $line == *"ProjectReference"* ]]; then
 
         ref=${line##*\\}
         ref=${ref##*=}
-        ref=${ref%.Deploy*}
-        ref=${ref%.csproj*}
-        
-        echo "$(read_project_file $(find ../$ref/$ref.Deploy.csproj))"
+        ref=${ref%.Deploy.csproj*}
 
+        echo "$ref"
+
+        echo "$(read_project_file $(find ../$ref/$ref.Deploy.csproj))"
     fi
     done < "$csproj_file"
 }
@@ -25,7 +27,7 @@ read_project_file()
 csproj_file=$(find ./*.Deploy.csproj)
 
 project_name=${csproj_file##./}
-project_name=${project_name%.csproj*}
+project_name=${project_name%.Deploy.csproj*}
 
 # Read all project references in "project reference tree" recursively 
 project_references+=("$(read_project_file "$csproj_file")")
@@ -41,7 +43,7 @@ echo WORKDIR /app >> Dockerfile
 
 echo "" >> Dockerfile
 
- echo COPY ./"$project_name"/"$project_name".Deploy.csproj ./"$project_name"/"$project_name".Deploy.csproj >> Dockerfile
+echo COPY ./"$project_name"/"$project_name".Deploy.csproj ./"$project_name"/"$project_name".Deploy.csproj >> Dockerfile
 
 for project_reference in "${project_references_unique[@]}"
 do 
