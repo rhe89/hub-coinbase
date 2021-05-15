@@ -1,12 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-    </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Hub.Storage.Repository.Core" Version="3.0.6" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\hub-shared\Hub.Storage\Hub.Storage.Repository.Core\Hub.Storage.Repository.Core.csproj" />
-      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Coinbase.Core\Coinbase.Core.Deploy.csproj" />
+	</ItemGroup>
 
 </Project>

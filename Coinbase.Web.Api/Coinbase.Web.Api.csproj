@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+		<PackageReference Include="Hub.Web.Api" Version="3.0.6" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\hub-shared\Hub.Web\Hub.Web.Api\Hub.Web.Api.csproj" />
-    <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
-    <ProjectReference Include="..\Coinbase.Factories\Coinbase.Factories.csproj" />
-    <ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.csproj" />
-    <ProjectReference Include="..\Coinbase.Providers\Coinbase.Providers.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Coinbase.Data\Coinbase.Data.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Factories\Coinbase.Factories.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.Deploy.csproj" />
+		<ProjectReference Include="..\Coinbase.Providers\Coinbase.Providers.Deploy.csproj" />
+	</ItemGroup>
+
 </Project>
