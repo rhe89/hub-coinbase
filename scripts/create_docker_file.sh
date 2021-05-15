@@ -69,7 +69,7 @@ done
 
 echo "" >> Dockerfile
 
-echo RUN dotnet publish ./"$project_name"/"$project_name".csproj -c Release -o out >> Dockerfile
+echo RUN dotnet publish ./"$project_name"/"$project_name".Deploy.csproj -c Release -o out >> Dockerfile
 
 echo "" >> Dockerfile
 
