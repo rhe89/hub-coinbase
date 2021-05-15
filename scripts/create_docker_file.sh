@@ -76,4 +76,4 @@ echo "" >> Dockerfile
 echo FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 >> Dockerfile
 echo WORKDIR /app >> Dockerfile
 echo COPY --from=build-env /app/out . >> Dockerfile
-echo ENTRYPOINT [\"dotnet\", \""$project_name".dll\"] >> Dockerfile
+echo ENTRYPOINT [\"dotnet\", \""$project_name".Deploy.dll\"] >> Dockerfile
