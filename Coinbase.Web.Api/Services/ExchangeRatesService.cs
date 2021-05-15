@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Coinbase.Core.Constants;
-using Coinbase.Core.Dto.Api;
 using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Factories;
 using Coinbase.Core.Integration;
@@ -29,35 +27,20 @@ namespace Coinbase.Web.Api.Services
             _logger = logger;
         }
         
-        public async Task<IList<ExchangeRatesDto>> GetExchangeRates()
+        public async Task<IList<ExchangeRateDto>> GetExchangeRates()
         {
             var exchangeRateDtos = await _exchangeRateProvider.GetExchangeRates();
 
-            return exchangeRateDtos.Select(Map).ToList();
+            return exchangeRateDtos;
         }
 
-        public async Task<ExchangeRatesDto> GetExchangeRateForCurrency(string currency)
+        public async Task<ExchangeRateDto> GetExchangeRateForCurrency(string currency)
         {
             var exchangeRateDto = await _exchangeRateProvider.GetExchangeRate(currency) ?? await GetExchangeRateFromCoinbaseAndAddToDb(currency);
 
-            if (exchangeRateDto == null)
-            {
-                return null;
-            }
-            
-            return Map(exchangeRateDto);
+            return exchangeRateDto;
         }
 
-        private static ExchangeRatesDto Map(ExchangeRateDto exchangeRateDto)
-        {
-            return new ExchangeRatesDto
-            {
-                Currency = exchangeRateDto.Currency,
-                NOKRate = exchangeRateDto.NOKRate,
-                EURRate = exchangeRateDto.EURRate,
-                USDRate = exchangeRateDto.USDRate
-            };
-        }
 
         private async Task<ExchangeRateDto> GetExchangeRateFromCoinbaseAndAddToDb(string currency)
         {

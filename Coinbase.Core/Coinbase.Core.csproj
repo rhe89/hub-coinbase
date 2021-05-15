@@ -6,7 +6,11 @@
 
     <ItemGroup>
       <PackageReference Include="Coinbase" Version="5.1.2" />
-      <PackageReference Include="Hub.Storage.Core" Version="3.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\hub-shared\Hub.Storage\Hub.Storage.Repository.Dto\Hub.Storage.Repository.Dto.csproj" />
+      <ProjectReference Include="..\..\hub-shared\Hub.Storage\Hub.Storage.Repository.Entities\Hub.Storage.Repository.Entities.csproj" />
     </ItemGroup>
 
 </Project>

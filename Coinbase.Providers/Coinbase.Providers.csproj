@@ -5,11 +5,12 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+      <ProjectReference Include="..\..\hub-shared\Hub.Storage\Hub.Storage.Repository.Core\Hub.Storage.Repository.Core.csproj" />
+      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
 using Coinbase.Core.Providers;
-using Hub.Storage.Core.Repository;
+using Hub.Storage.Repository.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace Coinbase.Providers
@@ -19,11 +19,10 @@ namespace Coinbase.Providers
 
         public async Task<IList<AccountDto>> GetAccounts()
         {
-            var accounts = _dbRepository
-                .Set<Account>()
-                .Include(x => x.Assets);
+            var accounts = await _dbRepository
+                .AllAsync<Account, AccountDto>(source => source.Include(x => x.Assets));
 
-            return await _dbRepository.ProjectAsync<Account, AccountDto>(accounts);
+            return accounts;
 
 
         }

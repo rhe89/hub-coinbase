@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\hub-shared\Hub.HostedServices\Hub.HostedServices.Schedule\Hub.HostedServices.Schedule.csproj" />
+      <ProjectReference Include="..\..\hub-shared\Hub.ServiceBus.Core\Hub.ServiceBus.Core.csproj" />
+      <ProjectReference Include="..\..\hub-shared\Hub.ServiceBus\Hub.ServiceBus.csproj" />
+      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
+      <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+    </ItemGroup>
+
+</Project>

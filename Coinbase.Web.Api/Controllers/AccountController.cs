@@ -6,16 +6,16 @@ namespace Coinbase.Web.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountsController(IAccountService accountService)
         {
             _accountService = accountService;
         }
 
-        [HttpGet("accounts")]
+        [HttpGet]
         public async Task<IActionResult> Accounts()
         {
             var accounts = await _accountService.GetAccounts();

@@ -1,36 +1,30 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.Core.Constants;
 using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
 using Coinbase.Core.Integration;
-using Hub.HostedServices.Tasks;
-using Hub.Storage.Core.Factories;
-using Hub.Storage.Core.Providers;
-using Hub.Storage.Core.Repository;
+using Hub.Storage.Repository.Core;
 using Microsoft.Extensions.Logging;
 
-namespace Coinbase.BackgroundTasks
+namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
 {
-    public class UpdateExchangeRatesTask : BackgroundTask
+    public class UpdateCoinbaseExchangeRatesCommandHandler : IUpdateCoinbaseExchangeRatesCommandHandler
     {
-        private readonly ILogger<UpdateExchangeRatesTask> _logger;
+        private readonly ILogger<UpdateCoinbaseExchangeRatesCommandHandler> _logger;
         private readonly ICoinbaseConnector _coinbaseConnector;
         private readonly IHubDbRepository _dbRepository;
 
-        public UpdateExchangeRatesTask(IBackgroundTaskConfigurationProvider backgroundTaskConfigurationProvider,
-            IBackgroundTaskConfigurationFactory backgroundTaskConfigurationFactory,
-            ILogger<UpdateExchangeRatesTask> logger,
+        public UpdateCoinbaseExchangeRatesCommandHandler(ILogger<UpdateCoinbaseExchangeRatesCommandHandler> logger,
             ICoinbaseConnector coinbaseConnector,
-            IHubDbRepository dbRepository) : base(backgroundTaskConfigurationProvider, backgroundTaskConfigurationFactory)
+            IHubDbRepository dbRepository)
         {
             _logger = logger;
             _coinbaseConnector = coinbaseConnector;
             _dbRepository = dbRepository;
         }
 
-        public override async Task Execute(CancellationToken cancellationToken)
+        public async Task UpdateExchangeRates()
         {
             var exchangeRatesInDb = await _dbRepository.AllAsync<ExchangeRate, ExchangeRateDto>();
             

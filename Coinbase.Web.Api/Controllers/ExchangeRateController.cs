@@ -15,7 +15,6 @@ namespace Coinbase.Web.Api.Controllers
             _exchangeRatesService = exchangeRatesService;
         }
         
-        [HttpGet("exchangerates")]
         public async Task<IActionResult> ExchangeRates()
         {
             var assets = await _exchangeRatesService.GetExchangeRates();

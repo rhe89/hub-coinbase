@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
 using Coinbase.Core.Providers;
-using Hub.Storage.Core.Repository;
+using Hub.Storage.Repository.Core;
 
 namespace Coinbase.Providers
 {

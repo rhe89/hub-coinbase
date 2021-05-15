@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+<PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Coinbase" Version="5.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\hub-shared\Hub.HostedServices\Hub.HostedServices.ServiceBusQueue\Hub.HostedServices.ServiceBusQueue.csproj" />
+      <ProjectReference Include="..\..\hub-shared\Hub.Web\Hub.Web.Http\Hub.Web.Http.csproj" />
+      <ProjectReference Include="..\Coinbase.Core\Coinbase.Core.csproj" />
+      <ProjectReference Include="..\Coinbase.Data\Coinbase.Data.csproj" />
+      <ProjectReference Include="..\Coinbase.Integration\Coinbase.Integration.csproj" />
+    </ItemGroup>
+
+</Project>

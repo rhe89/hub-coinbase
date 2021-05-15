@@ -46,7 +46,7 @@ namespace Coinbase.Web.Api.Services
                     Name = account.Currency,
                     Balance = balance?.Value ?? 0,
                     LastMonthBalance = lastMonthBalance?.Value ?? 0,
-                    LastYearBalance = lastYearBalance?.Value ?? 0,
+                    LastYearBalance = lastYearBalance?.Value ?? 0
                 });
             }
 

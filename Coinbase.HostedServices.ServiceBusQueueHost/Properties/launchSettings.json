@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "Coinbase.BackgroundWorker": {
+    "Coinbase.HostedServices.ServiceBusQueueHost": {
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"

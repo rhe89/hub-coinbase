@@ -1,7 +1,7 @@
 ﻿using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
 using Coinbase.Core.Factories;
-using Hub.Storage.Core.Repository;
+using Hub.Storage.Repository.Core;
 
 namespace Coinbase.Factories
 {
@@ -24,9 +24,7 @@ namespace Coinbase.Factories
                 EURRate = eurRate
             };
 
-            var exchangeRate = _dbRepository.Add<ExchangeRate, ExchangeRateDto>(exchangeRateDto);
-            
-            return exchangeRate == null ? null : _dbRepository.Map<ExchangeRate, ExchangeRateDto>(exchangeRate);
+            return _dbRepository.Add<ExchangeRate, ExchangeRateDto>(exchangeRateDto);
         }
     }
 }

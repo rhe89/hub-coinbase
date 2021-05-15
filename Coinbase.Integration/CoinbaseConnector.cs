@@ -6,7 +6,7 @@ using Coinbase.Core.Constants;
 using Coinbase.Core.Exceptions;
 using Coinbase.Core.Integration;
 using Coinbase.Models;
-using Hub.Storage.Core.Providers;
+using Hub.Settings.Core;
 
 namespace Coinbase.Integration
 {
@@ -31,7 +31,7 @@ namespace Coinbase.Integration
             }
             catch (Exception e)
             {
-                throw new CoinbaseConnectorException("CoinbaseConnector: Error sending request to Coinbase API", e);
+                throw new CoinbaseApiConnectorException("CoinbaseConnector: Error sending request to Coinbase API", e);
             }
 
             ValidateResponse(response);
@@ -55,7 +55,7 @@ namespace Coinbase.Integration
             }
             catch (Exception e)
             {
-                throw new CoinbaseConnectorException($"CoinbaseConnector: Error sending request to Coinbase API {e.Message}", e);
+                throw new CoinbaseApiConnectorException($"CoinbaseConnector: Error sending request to Coinbase API {e.Message}", e);
             }
             
             ValidateResponse(response);
@@ -65,16 +65,17 @@ namespace Coinbase.Integration
         
         private static void ValidateResponse(JsonResponse response)
         {
-            if (response?.Errors != null &&
-                response.Errors.Any() &&
-                response.Errors.All(x => x.Id != "not_found"))
+            if (response?.Errors == null || !response.Errors.Any() || response.Errors.Any(x => x.Id == "not_found"))
             {
-                var errors = response.Errors;
-
-                var msg = string.Join(",", errors.Select(x => x.Message));
-
-                throw new CoinbaseConnectorException($"CoinbaseConnector: Response from Coinbase contained errors: {msg}");
+                return;
             }
+            
+            var errors = response.Errors;
+
+            var msg = string.Join(",", errors.Select(x => x.Message));
+
+            throw new CoinbaseApiConnectorException($"CoinbaseConnector: Response from Coinbase contained errors: {msg}");
+            
         }
 
     }

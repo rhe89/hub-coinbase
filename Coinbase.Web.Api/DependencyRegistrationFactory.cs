@@ -1,5 +1,4 @@
 using AutoMapper;
-using Coinbase.BackgroundTasks;
 using Coinbase.Core.Factories;
 using Coinbase.Core.Integration;
 using Coinbase.Core.Providers;
@@ -9,7 +8,6 @@ using Coinbase.Factories;
 using Coinbase.Integration;
 using Coinbase.Providers;
 using Coinbase.Web.Api.Services;
-using Hub.Storage.Repository.AutoMapper;
 using Hub.Web.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Coinbase.Web.Api
 {
-    public class DependencyRegistrationFactory : DependencyRegistrationFactoryWithHostedServiceBase<CoinbaseDbContext>
+    public class DependencyRegistrationFactory : DependencyRegistrationFactory<CoinbaseDbContext>
     {
         public DependencyRegistrationFactory() : base("SQL_DB_COINBASE", "Coinbase.Data")
         {
@@ -32,13 +30,10 @@ namespace Coinbase.Web.Api
             serviceCollection.TryAddTransient<IExchangeRatesService, ExchangeRatesService>();
             serviceCollection.TryAddTransient<IExchangeRateProvider, ExchangeRateProvider>();
             serviceCollection.TryAddTransient<IExchangeRateFactory, ExchangeRateFactory>();
-            serviceCollection.TryAddScoped<ICoinbaseConnector, CoinbaseConnector>();
-            serviceCollection.TryAddScoped<UpdateAccountsTask>();
-            serviceCollection.TryAddScoped<UpdateExchangeRatesTask>();
+            serviceCollection.TryAddTransient<ICoinbaseConnector, CoinbaseConnector>();
             
             serviceCollection.AddAutoMapper(c =>
             {
-                c.AddHostedServiceProfiles();
                 c.AddCoinbaseProfiles();
             });
         }
