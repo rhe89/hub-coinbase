@@ -2,9 +2,9 @@ namespace Coinbase.Core.Constants
 {
     public static class QueueNames
     {
-        public const string CoinbaseAccountsUpdated = "coinbaseaccountsupdated";
-        public const string UpdateCoinbaseAccounts = "updatecoinbaseaccounts";
-        public const string UpdateCoinbaseExchangeRates = "updatecoinbaseexchangerates";
-        public const string CoinbaseExchangeRatesUpdated = "coinbaseexchangeratesupdated";
+        public static readonly string CoinbaseAccountsUpdated = "coinbaseaccountsupdated";
+        public static readonly string UpdateCoinbaseAccounts = "updatecoinbaseaccounts";
+        public static readonly string UpdateCoinbaseExchangeRates = "updatecoinbaseexchangerates";
+        public static readonly string CoinbaseExchangeRatesUpdated = "coinbaseexchangeratesupdated";
     }
 }

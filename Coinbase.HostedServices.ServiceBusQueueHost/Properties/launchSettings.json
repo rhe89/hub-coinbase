@@ -3,7 +3,8 @@
     "Coinbase.HostedServices.ServiceBusQueueHost": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOMAIN": "Coinbase"
       }
     }
   }

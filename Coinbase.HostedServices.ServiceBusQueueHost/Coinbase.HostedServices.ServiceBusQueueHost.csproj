@@ -5,8 +5,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Coinbase" Version="5.1.2" />
-		<PackageReference Include="Hub.HostedServices.ServiceBusQueue" Version="3.0.6" />
-		<PackageReference Include="Hub.Web.Http" Version="3.0.6" />
+		<PackageReference Include="Hub.HostedServices.ServiceBusQueue" Version="3.1.0" />
+		<PackageReference Include="Hub.Web.Http" Version="3.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
