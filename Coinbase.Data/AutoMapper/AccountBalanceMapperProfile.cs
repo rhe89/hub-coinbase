@@ -4,9 +4,9 @@ using Coinbase.Core.Entities;
 
 namespace Coinbase.Data.AutoMapper
 {
-    public class AssetsMapperProfile : Profile
+    public class AccountBalanceMapperProfile : Profile
     {
-        public AssetsMapperProfile()
+        public AccountBalanceMapperProfile()
         {
             CreateMap<AccountBalance, AccountBalanceDto>()
                 .ForMember(dest => dest.Balance, 

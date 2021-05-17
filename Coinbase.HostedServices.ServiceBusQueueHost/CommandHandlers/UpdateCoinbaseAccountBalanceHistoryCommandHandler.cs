@@ -63,7 +63,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
             var accountBalanceForCurrentDay = new AccountBalanceDto
             {
                 AccountId = account.Id,
-                Balance = account.Balance
+                Balance = (int)account.Balance
             };
 
             _dbRepository.QueueAdd<AccountBalance, AccountBalanceDto>(accountBalanceForCurrentDay);
@@ -71,7 +71,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
         
         private void UpdateAccountBalance(AccountBalanceDto accountBalanceForCurrentDay, AccountDto account)
         {
-            accountBalanceForCurrentDay.Balance = account.Balance;
+            accountBalanceForCurrentDay.Balance = (int)account.Balance;
 
             _dbRepository.QueueUpdate<AccountBalance, AccountBalanceDto>(accountBalanceForCurrentDay);
         }

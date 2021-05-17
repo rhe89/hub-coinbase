@@ -6,7 +6,6 @@ using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
 using Coinbase.Core.Providers;
 using Hub.Storage.Repository.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace Coinbase.Providers
 {
@@ -28,8 +27,6 @@ namespace Coinbase.Providers
                 .WhereAsync<Account, AccountDto>(predicate);
 
             return accounts;
-
-
         }
     }
 }

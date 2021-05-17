@@ -7,7 +7,7 @@ namespace Coinbase.Data.AutoMapper
         public static IMapperConfigurationExpression AddCoinbaseProfiles(this IMapperConfigurationExpression mapperConfigurationExpression)
         {
             mapperConfigurationExpression.AddProfile<AccountMapperProfile>();
-            mapperConfigurationExpression.AddProfile<AssetsMapperProfile>();
+            mapperConfigurationExpression.AddProfile<AccountBalanceMapperProfile>();
             mapperConfigurationExpression.AddProfile<ExchangeRateMapperProfile>();
 
             return mapperConfigurationExpression;

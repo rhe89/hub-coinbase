@@ -74,7 +74,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
                 return;
             }
 
-            var balance = correspondingCoinbaseAccount.Balance.Amount * exchangeRate.Rates[ExchangeRateConstants.NOK];
+            var balance = (int)correspondingCoinbaseAccount.Balance.Amount * exchangeRate.Rates[ExchangeRateConstants.NOK];
 
             dbAccount.Balance = balance;
 

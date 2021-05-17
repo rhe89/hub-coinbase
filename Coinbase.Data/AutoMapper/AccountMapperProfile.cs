@@ -11,7 +11,10 @@ namespace Coinbase.Data.AutoMapper
             CreateMap<Account, AccountDto>()
                 .ForMember(dest => dest.Balance, 
                     opt => opt.MapFrom(x => x.CurrentBalance))
+                .ForMember(dest => dest.Name, 
+                    opt => opt.MapFrom(x => x.Currency))
                 .ReverseMap();
+            
         }
     }
 }
