@@ -7,7 +7,6 @@ using Coinbase.Data.AutoMapper;
 using Coinbase.Factories;
 using Coinbase.Integration;
 using Coinbase.Providers;
-using Coinbase.Web.Api.Services;
 using Hub.Web.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,10 +23,7 @@ namespace Coinbase.Web.Api
         protected override void AddDomainDependencies(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             serviceCollection.TryAddTransient<IAccountProvider, AccountProvider>();
-            serviceCollection.TryAddTransient<IAssetsProvider, AssetsProvider>();
-            serviceCollection.TryAddTransient<IAssetsService, AssetsService>();
-            serviceCollection.TryAddTransient<IAccountService, AccountService>();
-            serviceCollection.TryAddTransient<IExchangeRatesService, ExchangeRatesService>();
+            serviceCollection.TryAddTransient<IAccountBalanceProvider, AccountBalanceProvider>();
             serviceCollection.TryAddTransient<IExchangeRateProvider, ExchangeRateProvider>();
             serviceCollection.TryAddTransient<IExchangeRateFactory, ExchangeRateFactory>();
             serviceCollection.TryAddTransient<ICoinbaseConnector, CoinbaseConnector>();

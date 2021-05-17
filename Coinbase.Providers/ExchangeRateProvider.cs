@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Coinbase.Core.Dto.Data;
 using Coinbase.Core.Entities;
@@ -16,14 +18,12 @@ namespace Coinbase.Providers
             _dbRepository = dbRepository;
         }
         
-        public async Task<IList<ExchangeRateDto>> GetExchangeRates()
+        public async Task<IList<ExchangeRateDto>> GetExchangeRates(string currency)
         {
-            return await _dbRepository.AllAsync<ExchangeRate, ExchangeRateDto>();
-        }
-        
-        public async Task<ExchangeRateDto> GetExchangeRate(string currency)
-        {
-            return await _dbRepository.FirstOrDefaultAsync<ExchangeRate, ExchangeRateDto>(er => er.Currency == currency);
+            Expression<Func<ExchangeRate, bool>> predicate = exchangeRate =>
+                (string.IsNullOrEmpty(currency) || exchangeRate.Currency.ToLower().Contains(currency.ToLower()));
+                
+            return await _dbRepository.WhereAsync<ExchangeRate, ExchangeRateDto>(predicate);
         }
     }
 }

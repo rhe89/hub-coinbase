@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Coinbase.Web.Api.Services;
+using Coinbase.Core.Providers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coinbase.Web.Api.Controllers
@@ -8,24 +8,16 @@ namespace Coinbase.Web.Api.Controllers
     [Route("api/[controller]")]
     public class ExchangeRatesController : ControllerBase
     {
-        private readonly IExchangeRatesService _exchangeRatesService;
+        private readonly IExchangeRateProvider _exchangeRatesProvider;
 
-        public ExchangeRatesController(IExchangeRatesService exchangeRatesService)
+        public ExchangeRatesController(IExchangeRateProvider exchangeRatesProvider)
         {
-            _exchangeRatesService = exchangeRatesService;
+            _exchangeRatesProvider = exchangeRatesProvider;
         }
         
-        public async Task<IActionResult> ExchangeRates()
+        public async Task<IActionResult> ExchangeRates([FromQuery]string currency)
         {
-            var assets = await _exchangeRatesService.GetExchangeRates();
-
-            return Ok(assets);
-        }
-        
-        [HttpGet("exchangerate")]
-        public async Task<IActionResult> ExchangeRate(string currency)
-        {
-            var assets = await _exchangeRatesService.GetExchangeRateForCurrency(currency);
+            var assets = await _exchangeRatesProvider.GetExchangeRates(currency);
 
             return Ok(assets);
         }

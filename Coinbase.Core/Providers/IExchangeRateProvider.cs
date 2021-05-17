@@ -6,7 +6,6 @@ namespace Coinbase.Core.Providers
 {
     public interface IExchangeRateProvider
     {
-        Task<IList<ExchangeRateDto>> GetExchangeRates();
-        Task<ExchangeRateDto> GetExchangeRate(string currency);
+        Task<IList<ExchangeRateDto>> GetExchangeRates(string currency);
     }
 }

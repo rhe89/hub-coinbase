@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Coinbase.Web.Api.Services;
+using Coinbase.Core.Providers;
 
 namespace Coinbase.Web.Api.Controllers
 {
@@ -8,17 +8,17 @@ namespace Coinbase.Web.Api.Controllers
     [Route("api/[controller]")]
     public class AccountsController : ControllerBase
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountProvider _accountProvider;
 
-        public AccountsController(IAccountService accountService)
+        public AccountsController(IAccountProvider accountProvider)
         {
-            _accountService = accountService;
+            _accountProvider = accountProvider;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Accounts()
+        public async Task<IActionResult> Accounts([FromQuery]string accountName)
         {
-            var accounts = await _accountService.GetAccounts();
+            var accounts = await _accountProvider.GetAccounts(accountName);
 
             return Ok(accounts);
         }

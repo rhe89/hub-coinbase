@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
 {
-    public interface IUpdateCoinbaseAccountsCommandHandler
+    public interface IUpdateCoinbaseAccountBalanceHistoryCommandHandler
     {
-        Task UpdateAccounts();
+        Task UpdateAccountBalance();
     }
 }

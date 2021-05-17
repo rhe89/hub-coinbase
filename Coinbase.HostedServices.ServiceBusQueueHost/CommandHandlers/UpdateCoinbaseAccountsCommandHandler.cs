@@ -26,7 +26,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
             _dbRepository = dbRepository;
         }
         
-        public async Task UpdateAccountAssets()
+        public async Task UpdateAccounts()
         {
             var accountsInDb = await _dbRepository.AllAsync<Account, AccountDto>();
             
@@ -38,7 +38,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
 
             foreach (var dbAccount in accountsInDb)
             {
-                _logger.LogInformation($"Updating account {counter++} of {accountsCount}: {dbAccount.Currency}.");
+                _logger.LogInformation($"Updating account {counter++} of {accountsCount}: {dbAccount.Name}.");
 
                 try
                 {
@@ -46,7 +46,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
                 }
                 catch (Exception e)
                 {
-                    _logger.LogWarning($"Failed updating account {dbAccount.Currency}. Continuing", e.Message);
+                    _logger.LogWarning($"Failed updating account {dbAccount.Name}. Continuing", e.Message);
                 }
             }
 
@@ -57,49 +57,28 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.CommandHandlers
 
         private async Task UpdateAccount(AccountDto dbAccount, IEnumerable<Models.Account> coinbaseAccounts)
         {
-
             var correspondingCoinbaseAccount =
-                coinbaseAccounts.FirstOrDefault(x => x.Currency.Code == dbAccount.Currency);
+                coinbaseAccounts.FirstOrDefault(x => x.Currency.Code == dbAccount.Name);
 
             if (correspondingCoinbaseAccount == null)
             {
-                _logger.LogWarning($"Couldn't get account {dbAccount.Currency} from Coinbase API. Skipping.");
+                _logger.LogWarning($"Couldn't get account {dbAccount.Name} from Coinbase API. Skipping.");
                 return;
             }
 
-            var exchangeRate = await _coinbaseApiConnector.GetExchangeRatesForCurrency(dbAccount.Currency);
+            var exchangeRate = await _coinbaseApiConnector.GetExchangeRatesForCurrency(dbAccount.Name);
 
             if (exchangeRate == null)
             {
-                _logger.LogWarning($"Couldn't get exchange rates for {dbAccount.Currency} from Coinbase API. Skipping.");
+                _logger.LogWarning($"Couldn't get exchange rates for {dbAccount.Name} from Coinbase API. Skipping.");
                 return;
             }
 
             var balance = correspondingCoinbaseAccount.Balance.Amount * exchangeRate.Rates[ExchangeRateConstants.NOK];
 
-            var existingAsset = dbAccount.Assets.FirstOrDefault(x =>
-                x.CreatedDate.Date == DateTime.Now.Date);
+            dbAccount.Balance = balance;
 
-            if (existingAsset != null)
-            {
-                _logger.LogInformation($"Updating assets for {dbAccount.Currency}");
-
-                existingAsset.Value = (int)balance;
-
-                _dbRepository.QueueUpdate<Asset, AssetDto>(existingAsset);
-            }
-            else
-            {
-                _logger.LogInformation($"Adding assets for currency {dbAccount.Currency}");
-
-                var asset = new AssetDto
-                {
-                    AccountId = dbAccount.Id,
-                    Value = (int)balance
-                };
-
-                _dbRepository.QueueAdd<Asset, AssetDto>(asset);
-            }
+            _dbRepository.QueueUpdate<Account, AccountDto>(dbAccount);
         }
     }
 }

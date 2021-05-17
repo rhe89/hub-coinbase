@@ -4,14 +4,16 @@ using Coinbase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Coinbase.Data.Migrations
 {
     [DbContext(typeof(CoinbaseDbContext))]
-    partial class CoinbaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210517200916_AccountRefactor")]
+    partial class AccountRefactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

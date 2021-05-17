@@ -8,7 +8,9 @@ namespace Coinbase.Data.AutoMapper
     {
         public AssetsMapperProfile()
         {
-            CreateMap<Asset, AssetDto>()
+            CreateMap<AccountBalance, AccountBalanceDto>()
+                .ForMember(dest => dest.Balance, 
+                    opt => opt.MapFrom(x => x.Value))
                 .ReverseMap();
         }
     }

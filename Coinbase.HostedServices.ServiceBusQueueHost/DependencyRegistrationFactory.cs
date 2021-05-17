@@ -21,6 +21,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost
             serviceCollection.AddTransient<IMessageSender, MessageSender>();
             serviceCollection.AddTransient<IUpdateCoinbaseAccountsCommandHandler, UpdateCoinbaseAccountsCommandHandler>();
             serviceCollection.AddTransient<IUpdateCoinbaseExchangeRatesCommandHandler, UpdateCoinbaseExchangeRatesCommandHandler>();
+            serviceCollection.AddTransient<IUpdateCoinbaseAccountBalanceHistoryCommandHandler, UpdateCoinbaseAccountBalanceHistoryCommandHandler>();
             serviceCollection.AddTransient<ICoinbaseConnector, CoinbaseConnector>();
             
             serviceCollection.AddAutoMapper(c =>
@@ -33,9 +34,11 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost
         {
             serviceCollection.AddTransient<UpdateCoinbaseAccountsCommand>();
             serviceCollection.AddTransient<UpdateCoinbaseExchangeRatesCommand>();  
+            serviceCollection.AddTransient<UpdateCoinbaseAccountBalanceHistoryCommand>();  
             
             serviceCollection.AddHostedService<UpdateCoinbaseExchangeRatesQueueListener>();
             serviceCollection.AddHostedService<UpdateCoinbaseAccountsQueueListener>();
+            serviceCollection.AddHostedService<UpdateCoinbaseAccountsBalanceHistoryQueueListener>();
         }
     }
 }

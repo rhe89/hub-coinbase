@@ -6,6 +6,6 @@ namespace Coinbase.Core.Providers
 {
     public interface IAccountProvider
     {
-        Task<IList<AccountDto>> GetAccounts();
+        Task<IList<AccountDto>> GetAccounts(string accountName);
     }
 }

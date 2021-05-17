@@ -22,7 +22,7 @@ namespace Coinbase.HostedServices.ServiceBusQueueHost.Commands
 
         public override async Task Execute(CancellationToken cancellationToken)
         {
-            await _updateCoinbaseAccountsCommandHandler.UpdateAccountAssets();
+            await _updateCoinbaseAccountsCommandHandler.UpdateAccounts();
         }
 
         public async Task NotifyConsumers()
